@@ -31,6 +31,7 @@ p {
     max-width: 100%;
     margin: 0 auto;
 }
+
 .contenido-producto{
     margin-bottom: 20px;
 }
@@ -60,6 +61,7 @@ h3 {
     position: sticky;
     top:0;
     background-color: white;
+    z-index: 10;
     padding: 0 0 10px 0;
 }
 
@@ -127,6 +129,7 @@ h3 {
     position: sticky;
     top: 0;
     display: flex;
+    z-index: 10;
     align-items: center;
     justify-content: center;
     /* text-align: center; */
@@ -167,7 +170,6 @@ li{
 /*------pie de pagina-----*/
 
 .footer{
-    background-color: rgb(43, 42, 42);
     position: fixed;
     bottom: 0;
     width: 100%;
@@ -175,6 +177,7 @@ li{
 
 .footer-contenido{
     padding: 1rem 0rem 0rem 0rem;
+    background-color: rgb(43, 42, 42);
 }
 
 @media(min-width:768px){
@@ -183,7 +186,7 @@ li{
         display: grid;
         grid-template-columns: 1fr 1fr;
         column-gap: 3rem;
-    
+        background-color: rgb(43, 42, 42);
     }
 }
 

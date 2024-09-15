@@ -1,5 +1,5 @@
 //CREAR ELEMENTOS
-function creator(father,typeElement,classes= null,id= null,name= null,value = null,type= null,label= null) {
+export function creator(father,typeElement,classes= null,id= null,name= null,value = null,type= null,label= null) {
     if (typeElement != null) {
       
       var element = document.createElement(`${typeElement}`);
@@ -21,7 +21,7 @@ function creator(father,typeElement,classes= null,id= null,name= null,value = nu
 }
 
 //BUSCADOR
-const search_products = ()=>{
+export const search_products = ()=>{
     if(document.querySelector(`.search-all`)){
         document.querySelector(`.search-all`).addEventListener("keyup",function(e){
             var tables_lines = document.querySelectorAll('.search-lines');
@@ -48,7 +48,35 @@ const search_products = ()=>{
     }
 }
 
-const categorias = {
+//CARRUSEL
+export const carrousel = (json)=>{
+    if(json.father){
+        if(Array.isArray(json.array_img)){
+            let max_img = json.array_img.length;
+            var count = 0;
+            var last_value = 0;
+            if(max_img > 1){
+                setInterval(()=>{
+                    count++;
+                    //console.log(count)
+                    if(count < max_img){
+                        last_value = count;
+                        json.father.innerHTML = `<img class="animate__animated animate__fadeIn" src="${json.array_img[count]}"/>`
+                    }else{
+                        last_value--;
+                        console.log(last_value)
+                        if(last_value === 0){
+                            count = 0;
+                        }
+                        json.father.innerHTML = `<img class="animate__animated animate__fadeIn" src="${json.array_img[last_value]}"/>`
+                    }
+                },10000)
+            }
+        }
+    }
+}
+
+export const categorias = {
     pantalones : "Pantalones",
     blusas : "Blusas",
     sudaderas : "Sudaderas",
@@ -56,38 +84,14 @@ const categorias = {
     accesorios : "Accesorios",
 }
 
-const productos = {
+export const productos = {
     pantalones : [
         {
             productos : "Ejemplo demo",
             piezas : "",
             talla : "",
             precio : "$10.00",
-            img : "img/ropa.jpg",
-            identfier : "",
-        },
-        {
-            productos : "Ejemplo demo",
-            piezas : "",
-            talla : "",
-            precio : "$10.00",
-            img : "img/ropa.jpg",
-            identfier : "",
-        },
-        {
-            productos : "Ejemplo demo",
-            piezas : "",
-            talla : "",
-            precio : "$10.00",
-            img : "img/ropa.jpg",
-            identfier : "",
-        },
-        {
-            productos : "Ejemplo demo",
-            piezas : "",
-            talla : "",
-            precio : "$10.00",
-            img : "img/ropa.jpg",
+            img : ["img/ropa.jpg","img/chicle.jpg"],
             identfier : "",
         },
     ],
@@ -97,13 +101,21 @@ const productos = {
             piezas : "",
             talla : "",
             precio : "$10.00",
-            img : "img/ropa.jpg",
+            img : ["img/ropa.jpg","img/chicle.jpg","img/chicle2.jpg"],
+            identfier : "",
+        },
+        {
+            productos : "Ejemplo demo",
+            piezas : "",
+            talla : "",
+            precio : "$10.00",
+            img : ["img/ropa.jpg","img/micro1.webp","img/micro2.jpg"],
             identfier : "",
         },
     ],
 };
 
-const informacion = {
+export const informacion = {
     contacto : {
         nombre : "",
         tel_movil : "5356107072",
@@ -116,7 +128,7 @@ const informacion = {
     }
 }
 
-const plantilla = {
+export const plantilla = {
     header : (data)=>{
         if(data.father){
             data.father.innerHTML = 
@@ -131,8 +143,10 @@ const plantilla = {
                         <a href="#domicilio">Envio <i class="fas fa-shipping-fast"></i></a>
                     </nav>
                 </div>
-                <div class="seccion-categorias"></div>
-                <div class="seccion-search"></div>
+                <div class="container-categories">
+                    <div class="seccion-categorias"></div>
+                    <div class="seccion-search"></div>
+                </div>
             `
         }
     },
@@ -141,7 +155,7 @@ const plantilla = {
             data.father.innerHTML = `<input type="search" class="search-all" placeholder="Ej: pantalon..."/>`
         }
     },
-    footer : (data)=>{
+    footer_contenido : (data)=>{
         if(data.father){
             data.father.innerHTML = 
             `
@@ -163,9 +177,16 @@ const plantilla = {
                         <h3>Ubicación <i class="fas fa-map-marked-alt"></i></h3>
                         <p>${data.ubicacion}</p>
                     </div>
-                    <div class="container-icon-WhatsApp">
-                        <a href="https://api.whatsapp.com/send?phone=${data.tel_movil}" target="blank" class="icon-whatsapp"><i class="fab fa-whatsapp"></i></a>
-                    </div>
+                </div>
+            `
+        }
+    },
+    footer_whatsapp: (data)=>{
+        if(data.father){
+            data.father.innerHTML = 
+            `
+                <div class="container-icon-WhatsApp">
+                    <a href="https://api.whatsapp.com/send?phone=${data.tel_movil}" target="blank" class="icon-whatsapp"><i class="fab fa-whatsapp"></i></a>
                 </div>
             `
         }
@@ -175,10 +196,11 @@ const plantilla = {
             var  div_all = creator(data.father,'div',`seccion-producto${data.identfier} search-lines`)
             div_all.setAttribute('style','margin-bottom:10px;')
             var seccion = creator(div_all,'div','seccion-incluida')
-            var div_img = creator(seccion,'div','imagen-incluida')
+            
+            var div_img = creator(seccion,'div',`imagen-incluida${data.identfier}`)
             var img = creator(div_img,'img')
                 img.setAttribute("src",`${data.img}`)
-            var div_lista = creator(div_img,'div','lista-incluida')
+            var div_lista = creator(seccion,'div','lista-incluida')
             div_lista.innerHTML = 
             `
                 <ul>
@@ -195,7 +217,6 @@ const plantilla = {
         }
     }   
 }
-
 
 ///ETIQUETAS///
 const headers = document.querySelector(".header")
@@ -250,12 +271,20 @@ if(contenido_producto){
 }
 
 if(footer){
-    plantilla.footer({
+    // plantilla.footer_contenido({
+    //     father : footer,
+    //     tel_movil : informacion.contacto.tel_movil,
+    //     ubicacion : informacion.contacto.ubicacion,
+    //     servicio_domicilio : informacion.contacto.servicio_domicilio,
+    // })
+
+    plantilla.footer_whatsapp({
         father : footer,
         tel_movil : informacion.contacto.tel_movil,
         ubicacion : informacion.contacto.ubicacion,
         servicio_domicilio : informacion.contacto.servicio_domicilio,
     })
+
 }
 
 function build_productos(json){
@@ -269,8 +298,13 @@ function build_productos(json){
                 piezas : res_prod.piezas,
                 talla : res_prod.talla,
                 precio : res_prod.precio,
-                img : res_prod.img,
+                img : res_prod.img[0],
                 identfier : index,
+            })
+
+            carrousel({
+                father : document.querySelector(`.imagen-incluida${index}`),
+                array_img : res_prod.img,
             })
         })
         search_products();
