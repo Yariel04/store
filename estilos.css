@@ -148,6 +148,13 @@ h3 {
         column-gap: 2rem;
     }
 }
+@media(max-width:768px){
+    .contenido-producto{
+        display:grid;
+        grid-template-columns: repeat(2,1fr);
+        column-gap: 2rem;
+    }
+}
 
 .seccion-producto1{
     margin-bottom: 2rem;
@@ -297,17 +304,24 @@ li{
     /* justify-content: center; */
     /* margin: 3rem 0; */
 }
+.seccion-categorias-globales{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 10px 0px;
+    border-bottom: 1px solid #ffbebe;
+}
 
 .btn-categorias{
     padding: 5px 10px;
-    border-top: none;
-    border-right: 1px solid #c2c2c2;
-    border-bottom: 1px solid #c2c2c2;
-    border-left: none;
+    border: none;
     background-color: transparent;
     color: black;
     font-size: 18px;
     cursor: pointer;
+    border-radius: 5px;
+    margin: 0px 1px;
     transition: transform 0.2s ease-in-out;
 }
 .btn-categorias-selected{

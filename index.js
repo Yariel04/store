@@ -77,11 +77,18 @@ export const carrousel = (json)=>{
 }
 
 export const categorias = {
-    pantalones : "Pantalones",
-    blusas : "Blusas",
-    sudaderas : "Sudaderas",
-    chaquetas : "Chaquetas",
-    accesorios : "Accesorios",
+    mujer : {
+        pantalones : "Pantalones",
+        blusas : "Blusas",
+        sudaderas : "Sudaderas",
+        chaquetas : "Chaquetas",
+        accesorios : "Accesorios",
+    },
+    hombre : {
+        sudaderas : "Sudaderas",
+        chaquetas : "Chaquetas",
+        accesorios : "Accesorios",
+    }
 }
 
 export const productos = {
@@ -135,15 +142,15 @@ export const plantilla = {
             `
                 <div class="contenedor-header contenido-header">
                     <div class="titulo">
-                        <h2> Tienda&Local</h2>
+                        <h2>Tienda&Local</h2>
                     </div>
                     <nav class="navegacion">
                         <a href="index.html">Inicio</a>
                         <a href="nosotros.html">Nosotros</a>
-                        <a href="#domicilio">Envio <i class="fas fa-shipping-fast"></i></a>
                     </nav>
                 </div>
                 <div class="container-categories">
+                    <div class="seccion-categorias-globales"></div>
                     <div class="seccion-categorias"></div>
                     <div class="seccion-search"></div>
                 </div>
@@ -213,9 +220,30 @@ export const plantilla = {
     categorias : (data)=>{
         if(data.father){
             var  div_all = creator(data.father,'div')
-            div_all.innerHTML = `<button type="button" class="btn-categorias click-to-select-categorias" code="${data.code}">${data.nombre}</button>`
+            div_all.innerHTML = `<button type="button" class="btn-categorias click-to-select-categorias click-to-select-categorias${data.code}" code_global="${data.code_global}" code="${data.code}">${data.nombre}</button>`
+
+            var clickselectcategorias = document.querySelector(`.click-to-select-categorias${data.code}`)
+            if(clickselectcategorias){
+                clickselectcategorias.addEventListener('click',function(){
+                    document.querySelectorAll(".click-to-select-categorias").forEach(each_selected=>{
+                        each_selected.classList.remove('btn-categorias-selected')
+                    })
+                    this.classList.add('btn-categorias-selected')
+                    build_productos({
+                        father : contenido_producto,
+                        prod : this.getAttribute('code'),
+                        prod_global : this.getAttribute('code_global'),
+                    })
+                })
+            }
         }
-    }   
+    },
+    categorias_globales : (data)=>{
+        if(data.father){
+            var  div_all = creator(data.father,'div')
+            div_all.innerHTML = `<button type="button" class="btn-categorias click-to-select-categorias-globales" code="${data.code}">${data.nombre}</button>`
+        }
+    },   
 }
 
 ///ETIQUETAS///
@@ -227,6 +255,7 @@ if(headers){
 }
 
 const contenido_categorias = document.querySelector(".seccion-categorias")
+const contenido_categorias_globales = document.querySelector(".seccion-categorias-globales")
 const contenido_producto = document.querySelector(".contenido-producto")
 const titles = document.querySelector(".seccion-search")
 const footer = document.querySelector('.footer')
@@ -238,25 +267,43 @@ if(titles){
 }
 
 if(contenido_categorias){
-    Object.keys(categorias).forEach((each_cat)=>{
-        let res_cat = categorias[each_cat];
-        plantilla.categorias({
-            father : contenido_categorias,
-            code : each_cat,
-            nombre : res_cat,
+    if(contenido_categorias_globales){
+        Object.keys(categorias).forEach((each_cat)=>{
+            let res_cat = categorias[each_cat];
+
+            plantilla.categorias_globales({
+                father : contenido_categorias_globales,
+                code : each_cat,
+                nombre : each_cat,
+            })
+
+            Object.keys(res_cat).forEach(each_cat_int=>{
+                plantilla.categorias({
+                    father : contenido_categorias,
+                    code : each_cat_int,
+                    nombre : res_cat[each_cat_int],
+                    code_global : each_cat,
+                })
+            })
         })
-    })
-    var clickselectcategorias = document.querySelectorAll(".click-to-select-categorias")
-    if(clickselectcategorias){
-        clickselectcategorias.forEach(each_click=>{
+    }
+
+    var clickselectcategorias_globales = document.querySelectorAll(".click-to-select-categorias-globales")
+    if(clickselectcategorias_globales){
+        clickselectcategorias_globales.forEach(each_click=>{
             each_click.addEventListener('click',function(){
-                document.querySelectorAll(".click-to-select-categorias").forEach(each_selected=>{
+                document.querySelectorAll(".click-to-select-categorias-globales").forEach(each_selected=>{
                     each_selected.classList.remove('btn-categorias-selected')
                 })
                 this.classList.add('btn-categorias-selected')
-                build_productos({
-                    father : contenido_producto,
-                    prod : this.getAttribute('code'),
+                contenido_categorias.innerHTML = '';
+                Object.keys(categorias[this.getAttribute("code")]).forEach(each_cat_int=>{
+                    plantilla.categorias({
+                        father : contenido_categorias,
+                        code : each_cat_int,
+                        nombre : categorias[this.getAttribute("code")][each_cat_int],
+                        code_global : this.getAttribute("code"),
+                    })
                 })
             })
         })
@@ -267,6 +314,7 @@ if(contenido_producto){
     build_productos({
         father : contenido_producto,
         prod : "pantalones",
+        prod_global : "mujer",
     })
 }
 

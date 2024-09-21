@@ -44,8 +44,6 @@ export const plantilla = {
                     </div>
                     <nav class="navegacion">
                         <a href="index.html">Inicio</a>
-                        <a href="nosotros.html">Nosotros</a>
-                        <a href="#domicilio">Envio <i class="fas fa-shipping-fast"></i></a>
                     </nav>
                 </div>
                 <div class="container-categories">
