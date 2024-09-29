@@ -20,7 +20,7 @@ if (titles) {
   });
 }
 
-if (contenido_categorias) {
+if(contenido_categorias) {
   if (contenido_categorias_globales) {
     Object.keys(categorias).forEach((each_cat) => {
       let res_cat = categorias[each_cat];
@@ -43,9 +43,7 @@ if (contenido_categorias) {
     });
   }
 
-  var clickselectcategorias_globales = document.querySelectorAll(
-    ".click-to-select-categorias-globales"
-  );
+  var clickselectcategorias_globales = document.querySelectorAll( ".click-to-select-categorias-globales");
   if (clickselectcategorias_globales) {
     clickselectcategorias_globales.forEach((each_click) => {
       each_click.addEventListener("click", function () {
@@ -54,17 +52,33 @@ if (contenido_categorias) {
         });
         this.classList.add("btn-categorias-selected");
         contenido_categorias.innerHTML = "";
-        Object.keys(categorias[this.getAttribute("code")]).forEach(
-          (each_cat_int) => {
-            plantilla.categorias({
-              father: contenido_categorias,
-              father_producto : contenido_producto,
-              code: each_cat_int,
-              nombre: categorias[this.getAttribute("code")][each_cat_int],
-              code_global: this.getAttribute("code"),
+        switch(this.getAttribute("code")){
+          case'Todos':
+            Object.keys(categorias).forEach((each_cat) => {
+              let res_cat = categorias[each_cat];
+              Object.keys(res_cat).forEach((each_cat_int) => {
+                plantilla.categorias({
+                  father: contenido_categorias,
+                  father_producto : contenido_producto,
+                  code: each_cat_int,
+                  nombre: res_cat[each_cat_int],
+                  code_global: each_cat,
+                });
+              });
             });
-          }
-        );
+          break;
+          default:
+              Object.keys(categorias[this.getAttribute("code")]).forEach((each_cat_int) => {
+                plantilla.categorias({
+                  father: contenido_categorias,
+                  father_producto : contenido_producto,
+                  code: each_cat_int,
+                  nombre: categorias[this.getAttribute("code")][each_cat_int],
+                  code_global: this.getAttribute("code"),
+                });
+              });
+          break;
+        }
       });
     });
   }
@@ -73,8 +87,8 @@ if (contenido_categorias) {
 if(contenido_producto) {
   actions.build_productos({
     father: contenido_producto,
-    prod: "pantalones",
-    prod_global: "mujer",
+    prod: "Todos",
+    prod_global: "Todos",
   });
 }
 

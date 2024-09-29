@@ -102,7 +102,10 @@ if (json.father) {
 };
   
 export const categorias = {
-    mujer: {
+    Todos : {
+        Todos : "Todos los productos"
+    },
+    Mujer: {
         pantalones: "Pantalones",
         blusas: "Blusas",
         sudaderas: "Sudaderas",
@@ -114,22 +117,40 @@ export const categorias = {
 export const productos = {
     pantalones: [
         {
-        productos: "Ejemplo demo",
-        piezas: "",
-        talla: "",
-        precio: "$10.00",
-        img: ["img/ropa.jpg", "img/chicle.jpg"],
-        identfier: "",
+            productos: "Ejemplo demo",
+            piezas: "",
+            talla: "",
+            precio: "$10.00",
+            img: ["img/ropa.jpg", "img/chicle.jpg"],
+            identfier: "",
         },
         {
-        productos: "Ejemplo demo",
-        piezas: "",
-        talla: "",
-        precio: "$10.00",
-        img: ["img/ropa.jpg", "img/chicle.jpg"],
-        identfier: "",
+            productos: "Ejemplo demo",
+            piezas: "",
+            talla: "",
+            precio: "$10.00",
+            img: ["img/ropa.jpg", "img/chicle.jpg"],
+            identfier: "",
         },
     ],
+    blusas : [
+        {
+            productos: "Ejemplo demo",
+            piezas: "",
+            talla: "",
+            precio: "$10.00",
+            img: ["img/ropa.jpg", "img/chicle.jpg"],
+            identfier: "",
+        },
+        {
+            productos: "Ejemplo demo",
+            piezas: "",
+            talla: "",
+            precio: "$10.00",
+            img: ["img/ropa.jpg", "img/chicle.jpg"],
+            identfier: "",
+        },
+    ]
 };
   
 export const informacion = {
@@ -205,11 +226,7 @@ export const plantilla = {
     },
     productos: (data) => {
         if (data.father) {
-        var div_all = creator(
-            data.father,
-            "div",
-            `seccion-producto${data.identfier} search-lines`
-        );
+        var div_all = creator(data.father,"div",`seccion-producto${data.identfier} search-lines`);
         div_all.setAttribute("style", "margin-bottom:10px;");
         var seccion = creator(div_all, "div", "seccion-incluida");
 
@@ -230,15 +247,13 @@ export const plantilla = {
             var div_all = creator(data.father, "div");
             div_all.innerHTML = `<button type="button" class="btn-categorias click-to-select-categorias click-to-select-categorias${data.code}" code_global="${data.code_global}" code="${data.code}">${data.nombre}</button>`;
 
-            var clickselectcategorias = document.querySelector(
-                `.click-to-select-categorias${data.code}`
-            );
+            var clickselectcategorias = document.querySelector(`.click-to-select-categorias${data.code}`);
             if (clickselectcategorias) {
                 clickselectcategorias.addEventListener("click", function () {
-                document.querySelectorAll(".click-to-select-categorias").forEach((each_selected) => {
-                    each_selected.classList.remove("btn-categorias-selected");
-                });
-                this.classList.add("btn-categorias-selected");
+                    document.querySelectorAll(".click-to-select-categorias").forEach((each_selected) => {
+                        each_selected.classList.remove("btn-categorias-selected");
+                    });
+                    this.classList.add("btn-categorias-selected");
                     actions.build_productos({
                         father: data.father_producto,
                         prod: this.getAttribute("code"),
@@ -246,12 +261,20 @@ export const plantilla = {
                     });
                 });
             }
+            
+            if(data.code_global === "Todos"){
+                actions.build_productos({
+                    father: data.father_producto,
+                    prod: "Todos",
+                    prod_global: "Todos",
+                });
+            }
         }
     },
     categorias_globales: (data) => {
         if (data.father) {
         var div_all = creator(data.father, "div");
-        div_all.innerHTML = `<button type="button" class="btn-categorias click-to-select-categorias-globales" code="${data.code}">${data.nombre}</button>`;
+        div_all.innerHTML = `<button type="button" class="btn-categorias click-to-select-categorias-globales ${data.code === "Todos" ? 'btn-categorias-selected' : ''}" code="${data.code}">${data.nombre}</button>`;
         }
     },
 };
@@ -260,23 +283,52 @@ export const actions = {
     build_productos : (json)=>{
         json.father.innerHTML = ``;
         if (json.father && json.prod) {
-            Object.keys(productos[`${json.prod}`]).forEach((each_prod, index) => {
-            let res_prod = productos[`${json.prod}`][each_prod];
-            plantilla.productos({
-                father: json.father,
-                productos: res_prod.productos,
-                piezas: res_prod.piezas,
-                talla: res_prod.talla,
-                precio: res_prod.precio,
-                img: res_prod.img[0],
-                identfier: index,
-            });
-
-            carrousel({
-                father: document.querySelector(`.imagen-incluida${index}`),
-                array_img: res_prod.img,
-            });
-            });
+            switch(json.prod){
+                case'Todos':
+                    Object.keys(productos).forEach((each_prod, index) => {
+                        Object.keys(productos[each_prod]).forEach((each_all,idx)=>{
+                            let res_prod = productos[each_prod][each_all];
+                            plantilla.productos({
+                                father: json.father,
+                                productos: res_prod.productos,
+                                piezas: res_prod.piezas,
+                                talla: res_prod.talla,
+                                precio: res_prod.precio,
+                                img: res_prod.img[0],
+                                identfier: index,
+                            });
+            
+                            carrousel({
+                                father: document.querySelector(`.imagen-incluida${index}`),
+                                array_img: res_prod.img,
+                            });
+                        })
+                    });
+                break;
+                default:
+                    if(productos[`${json.prod}`]){
+                        Object.keys(productos[`${json.prod}`]).forEach((each_prod, index) => {
+                            let res_prod = productos[`${json.prod}`][each_prod];
+                            plantilla.productos({
+                                father: json.father,
+                                productos: res_prod.productos,
+                                piezas: res_prod.piezas,
+                                talla: res_prod.talla,
+                                precio: res_prod.precio,
+                                img: res_prod.img[0],
+                                identfier: index,
+                            });
+            
+                            carrousel({
+                                father: document.querySelector(`.imagen-incluida${index}`),
+                                array_img: res_prod.img,
+                            });
+                        });
+                    }else{
+                        json.father.innerHTML = `<div style="display:flex; align-items:center;">No se encontraron resultados <img style="width:20px;" src="img/notfound.png"></img></div>`
+                    }
+                break;
+            }
             search_products();
         }
     }
