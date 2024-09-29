@@ -103,7 +103,7 @@ if (json.father) {
   
 export const categorias = {
     Todos : {
-        Todos : "Todos los productos"
+        Todos : "Todos"
     },
     Mujer: {
         pantalones: "Pantalones",
@@ -111,46 +111,69 @@ export const categorias = {
         sudaderas: "Sudaderas",
         chaquetas: "Chaquetas",
         accesorios: "Accesorios",
+        comidades: "Comidades",
+        trajes: "Trajes",
+        calzados: "Calzados",
     },
 };
   
 export const productos = {
     pantalones: [
         {
-            productos: "Ejemplo demo",
-            piezas: "",
-            talla: "",
-            precio: "$10.00",
-            img: ["img/ropa.jpg", "img/chicle.jpg"],
-            identfier: "",
+          "identifier": 1,
+          "productos": "Manzana Roja",
+          "precio": 0.99,
+          "categoria": "Frutas",
+          "descripcion": "Manzana roja, jugosa y dulce.",
+          "stock": 20,
+          "img": ["img/chicle.jpg"]
         },
         {
-            productos: "Ejemplo demo",
-            piezas: "",
-            talla: "",
-            precio: "$10.00",
-            img: ["img/ropa.jpg", "img/chicle.jpg"],
-            identfier: "",
+          "identifier": 2,
+          "productos": "Banana Platano",
+          "precio": 0.59,
+          "categoria": "Frutas",
+          "descripcion": "Banana madura, ideal para consumir sola o en batidos.",
+          "stock": 50,
+          "img": ["img/micro1.webp"]
         },
+        {
+          "identifier": 3,
+          "productos": "Naranja Navel",
+          "precio": 0.79,
+          "categoria": "Frutas",
+          "descripcion": "Naranja Navel, sin semillas y muy sabrosa.",
+          "stock": 30,
+          "img": ["img/ropa.jpg"]
+        },
+        {
+            "identifier": 1,
+            "productos": "Manzana Roja",
+            "precio": 0.99,
+            "categoria": "Frutas",
+            "descripcion": "Manzana roja, jugosa y dulce.",
+            "stock": 20,
+            "img": ["img/chicle.jpg"]
+          },
+          {
+            "identifier": 2,
+            "productos": "Banana Platano",
+            "precio": 0.59,
+            "categoria": "Frutas",
+            "descripcion": "Banana madura, ideal para consumir sola o en batidos.",
+            "stock": 50,
+            "img": ["img/micro1.webp"]
+          },
+          {
+            "identifier": 3,
+            "productos": "Naranja Navel",
+            "precio": 0.79,
+            "categoria": "Frutas",
+            "descripcion": "Naranja Navel, sin semillas y muy sabrosa.",
+            "stock": 30,
+            "img": ["img/ropa.jpg"]
+          }
     ],
-    blusas : [
-        {
-            productos: "Ejemplo demo",
-            piezas: "",
-            talla: "",
-            precio: "$10.00",
-            img: ["img/ropa.jpg", "img/chicle.jpg"],
-            identfier: "",
-        },
-        {
-            productos: "Ejemplo demo",
-            piezas: "",
-            talla: "",
-            precio: "$10.00",
-            img: ["img/ropa.jpg", "img/chicle.jpg"],
-            identfier: "",
-        },
-    ]
 };
   
 export const informacion = {
@@ -177,9 +200,15 @@ export const plantilla = {
                             <a href="nosotros.html">Nosotros</a>
                         </nav>
                     </div>
-                    <div class="container-categories">
+                    <div class="container-categories" style="margin: 10px;">
                         <div class="seccion-categorias-globales"></div>
-                        <div class="seccion-categorias"></div>
+                        <div>
+                            <div class="seccion-categorias seccion-categorias-view"></div>
+                            <details style="padding: 5px 0px; width: 100%;margin: 0px 10px;">
+                                <summary>Más categorias...</summary>
+                                <div class="seccion-categorias seccion-categorias-sumary"></div>
+                            </details>
+                        </div>
                         <div class="seccion-search"></div>
                     </div>
                 `;
@@ -226,11 +255,11 @@ export const plantilla = {
     },
     productos: (data) => {
         if (data.father) {
-        var div_all = creator(data.father,"div",`seccion-producto${data.identfier} search-lines`);
+        var div_all = creator(data.father,"div",`seccion-producto${data.identifier} search-lines`);
         div_all.setAttribute("style", "margin-bottom:10px;");
         var seccion = creator(div_all, "div", "seccion-incluida");
 
-        var div_img = creator(seccion, "div", `imagen-incluida${data.identfier}`);
+        var div_img = creator(seccion, "div", `imagen-incluida${data.identifier}`);
         var img = creator(div_img, "img");
         img.setAttribute("src", `${data.img}`);
         var div_lista = creator(seccion, "div", "lista-incluida");
@@ -295,13 +324,13 @@ export const actions = {
                                 talla: res_prod.talla,
                                 precio: res_prod.precio,
                                 img: res_prod.img[0],
-                                identfier: index,
+                                identifier: index,
                             });
             
-                            carrousel({
-                                father: document.querySelector(`.imagen-incluida${index}`),
-                                array_img: res_prod.img,
-                            });
+                            // carrousel({
+                            //     father: document.querySelector(`.imagen-incluida${index}`),
+                            //     array_img: res_prod.img,
+                            // });
                         })
                     });
                 break;
@@ -316,13 +345,13 @@ export const actions = {
                                 talla: res_prod.talla,
                                 precio: res_prod.precio,
                                 img: res_prod.img[0],
-                                identfier: index,
+                                identifier: index,
                             });
             
-                            carrousel({
-                                father: document.querySelector(`.imagen-incluida${index}`),
-                                array_img: res_prod.img,
-                            });
+                            // carrousel({
+                            //     father: document.querySelector(`.imagen-incluida${index}`),
+                            //     array_img: res_prod.img,
+                            // });
                         });
                     }else{
                         json.father.innerHTML = `<div style="display:flex; align-items:center;">No se encontraron resultados <img style="width:20px;" src="img/notfound.png"></img></div>`

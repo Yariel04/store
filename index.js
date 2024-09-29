@@ -8,7 +8,8 @@ if (headers) {
   });
 }
 
-const contenido_categorias = document.querySelector(".seccion-categorias");
+const contenido_categorias = document.querySelector(".seccion-categorias-view");
+const contenido_categorias_sumary = document.querySelector(".seccion-categorias-sumary");
 const contenido_categorias_globales = document.querySelector(".seccion-categorias-globales");
 const contenido_producto = document.querySelector(".contenido-producto");
 const titles = document.querySelector(".seccion-search");
@@ -31,9 +32,9 @@ if(contenido_categorias) {
         nombre: each_cat,
       });
 
-      Object.keys(res_cat).forEach((each_cat_int) => {
+      Object.keys(res_cat).forEach((each_cat_int,idx) => {
         plantilla.categorias({
-          father: contenido_categorias,
+          father: idx < parseInt(5) ? contenido_categorias : contenido_categorias_sumary,
           father_producto : contenido_producto,
           code: each_cat_int,
           nombre: res_cat[each_cat_int],
@@ -52,13 +53,14 @@ if(contenido_categorias) {
         });
         this.classList.add("btn-categorias-selected");
         contenido_categorias.innerHTML = "";
+        contenido_categorias_sumary.innerHTML = "";
         switch(this.getAttribute("code")){
           case'Todos':
             Object.keys(categorias).forEach((each_cat) => {
               let res_cat = categorias[each_cat];
-              Object.keys(res_cat).forEach((each_cat_int) => {
+              Object.keys(res_cat).forEach((each_cat_int,idx) => {
                 plantilla.categorias({
-                  father: contenido_categorias,
+                  father: idx < parseInt(5) ? contenido_categorias : contenido_categorias_sumary,
                   father_producto : contenido_producto,
                   code: each_cat_int,
                   nombre: res_cat[each_cat_int],
@@ -68,9 +70,9 @@ if(contenido_categorias) {
             });
           break;
           default:
-              Object.keys(categorias[this.getAttribute("code")]).forEach((each_cat_int) => {
+              Object.keys(categorias[this.getAttribute("code")]).forEach((each_cat_int,idx) => {
                 plantilla.categorias({
-                  father: contenido_categorias,
+                  father: idx < parseInt(5) ? contenido_categorias : contenido_categorias_sumary,
                   father_producto : contenido_producto,
                   code: each_cat_int,
                   nombre: categorias[this.getAttribute("code")][each_cat_int],
